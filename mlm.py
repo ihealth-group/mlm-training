@@ -1,6 +1,7 @@
 from transformers import set_seed
 from datasets import load_dataset
 import boto3
+import wandb
 
 from transformers import (
   AutoConfig,
@@ -17,6 +18,11 @@ CORPUS_TRAIN    = 'corpus_train.shc'
 CORPUS_DEV      = 'corpus_dev.shc'
 RUN_NAME        = 'shc-lm-1'
 BERT_MODEL_NAME = 'xlm-roberta-large'
+PROJECT_NAME    = 'shc'
+
+wandb.login()
+
+w_run = wandb.init(name=RUN_NAME, project=PROJECT_NAME, notes="Transfer learning from V1")
 
 s3 = boto3.client('s3')
 
@@ -93,3 +99,4 @@ trainer = Trainer(
 
 trainer.train()
 trainer.save_model()
+w_run.finish()
