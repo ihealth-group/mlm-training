@@ -16,7 +16,7 @@ CN_MODEL_NAME   = 'shc-lm-v3'
 CORPUS_BUCKET   = 'shc-mlm-corpus'
 CORPUS_TRAIN    = 'corpus_train.shc'
 CORPUS_DEV      = 'corpus_dev.shc'
-RUN_NAME        = 'shc-lm-3'
+RUN_NAME        = 'shc-lm-5'
 BERT_MODEL_NAME = 'xlm-roberta-large'
 PROJECT_NAME    = 'shc'
 
