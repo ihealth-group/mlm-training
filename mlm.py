@@ -17,7 +17,7 @@ CN_MODEL_NAME   = 'shc-lm-v3'
 CORPUS_BUCKET   = 'shc-mlm-corpus'
 CORPUS_TRAIN    = 'corpus_train.shc'
 CORPUS_DEV      = 'corpus_dev.shc'
-BERT_MODEL_NAME = 'xlm-roberta-large'
+BERT_MODEL_NAME = 'xlm-roberta-base'
 PROJECT_NAME    = 'shc'
 
 wandb.login()
