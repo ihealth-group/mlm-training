@@ -2,6 +2,7 @@ from transformers import set_seed
 from datasets import load_dataset
 import boto3
 import wandb
+import os
 
 from transformers import (
   AutoConfig,
@@ -25,21 +26,22 @@ wandb.login()
 w_run = wandb.init(name=RUN_NAME, project=PROJECT_NAME, notes="Transfer learning from V1")
 
 s3 = boto3.client('s3')
-
-s3.download_file(CORPUS_BUCKET, CORPUS_TRAIN, CORPUS_TRAIN)
-s3.download_file(CORPUS_BUCKET, CORPUS_DEV, CORPUS_DEV)
+if not os.path.exists(CORPUS_TRAIN):
+  s3.download_file(CORPUS_BUCKET, CORPUS_TRAIN, CORPUS_TRAIN)
+if not os.path.exists(CORPUS_DEV):
+  s3.download_file(CORPUS_BUCKET, CORPUS_DEV, CORPUS_DEV)
 
 training_args = TrainingArguments(
   output_dir=f'./{CN_MODEL_NAME}',
   overwrite_output_dir=True,
   num_train_epochs=2,
-  per_device_train_batch_size=2,
-  save_steps=1_000,
+  per_device_train_batch_size=1,
+  save_steps=1000,
   save_total_limit=1,
   gradient_accumulation_steps=8,
-  warmup_steps=1_000,
+  warmup_steps=1000,
   weight_decay=0.01,
-  learning_rate=1e-4,
+  learning_rate=2e-5,
   run_name=RUN_NAME,
   report_to=["wandb"],
   logging_steps=500,
