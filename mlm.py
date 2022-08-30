@@ -16,7 +16,7 @@ CN_MODEL_NAME   = 'shc-lm-v3'
 CORPUS_BUCKET   = 'shc-mlm-corpus'
 CORPUS_TRAIN    = 'corpus_train.shc'
 CORPUS_DEV      = 'corpus_dev.shc'
-RUN_NAME        = 'shc-lm-5'
+RUN_NAME        = 'shc-lm-6'
 BERT_MODEL_NAME = 'xlm-roberta-large'
 PROJECT_NAME    = 'shc'
 
@@ -33,7 +33,7 @@ training_args = TrainingArguments(
   output_dir=f'./{CN_MODEL_NAME}',
   overwrite_output_dir=True,
   num_train_epochs=2,
-  per_device_train_batch_size=8,
+  per_device_train_batch_size=2,
   save_steps=1_000,
   save_total_limit=1,
   gradient_accumulation_steps=16,
