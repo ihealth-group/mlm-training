@@ -37,7 +37,7 @@ training_args = TrainingArguments(
   per_device_train_batch_size=2,
   save_steps=1000,
   save_total_limit=1,
-  gradient_accumulation_steps=4,
+  gradient_accumulation_steps=8,
   warmup_steps=1000,
   weight_decay=0.01,
   learning_rate=1e-5,
@@ -46,7 +46,7 @@ training_args = TrainingArguments(
   fp16=True
 )
 
-# Works on v100:
+# Works on v100 and T4:
 # batch: 2
 # grad acc: 8
 
