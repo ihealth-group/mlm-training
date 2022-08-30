@@ -34,10 +34,10 @@ training_args = TrainingArguments(
   output_dir=f'./{CN_MODEL_NAME}',
   overwrite_output_dir=True,
   num_train_epochs=2,
-  per_device_train_batch_size=2,
+  per_device_train_batch_size=4,
   save_steps=1000,
   save_total_limit=1,
-  gradient_accumulation_steps=8,
+  gradient_accumulation_steps=4,
   warmup_steps=1000,
   weight_decay=0.01,
   learning_rate=1e-5,
@@ -45,6 +45,10 @@ training_args = TrainingArguments(
   logging_steps=500,
   fp16=True
 )
+
+# Works on v100:
+# batch: 2
+# grad acc: 8
 
 set_seed(42)
 
