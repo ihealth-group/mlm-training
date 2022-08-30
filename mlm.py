@@ -10,7 +10,8 @@ from transformers import (
   AutoTokenizer,
   DataCollatorForLanguageModeling,
   Trainer,
-  TrainingArguments
+  TrainingArguments,
+  IntervalStrategy
 )
 
 CN_MODEL_NAME   = 'shc-lm-v3'
@@ -20,9 +21,9 @@ CORPUS_DEV      = 'corpus_dev.shc'
 BERT_MODEL_NAME = 'xlm-roberta-base'
 PROJECT_NAME    = 'shc'
 
-wandb.login()
+# wandb.login()
 
-w_run = wandb.init(project=PROJECT_NAME, notes="Transfer learning from V1")
+# w_run = wandb.init(project=PROJECT_NAME, notes="Transfer learning from V1")
 
 s3 = boto3.client('s3')
 if not os.path.exists(CORPUS_TRAIN):
@@ -35,15 +36,19 @@ training_args = TrainingArguments(
   overwrite_output_dir=True,
   num_train_epochs=2,
   per_device_train_batch_size=2,
+  gradient_accumulation_steps=8,
+  gradient_checkpointing=True,
+  optim="adafactor",
   save_steps=1000,
   save_total_limit=1,
-  gradient_accumulation_steps=8,
   warmup_steps=1000,
   weight_decay=0.01,
   learning_rate=1e-5,
-  report_to=["wandb"],
+  # report_to=["wandb"],
   logging_steps=500,
-  fp16=True
+  fp16=True,
+  evaluation_strategy=IntervalStrategy.STEPS,
+  eval_steps=3000
 )
 
 # Works on v100 and T4:
@@ -104,4 +109,4 @@ trainer = Trainer(
 
 trainer.train()
 trainer.save_model()
-w_run.finish()
+# w_run.finish()
