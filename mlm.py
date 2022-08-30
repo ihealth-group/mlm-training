@@ -17,13 +17,12 @@ CN_MODEL_NAME   = 'shc-lm-v3'
 CORPUS_BUCKET   = 'shc-mlm-corpus'
 CORPUS_TRAIN    = 'corpus_train.shc'
 CORPUS_DEV      = 'corpus_dev.shc'
-RUN_NAME        = 'shc-lm-7'
 BERT_MODEL_NAME = 'xlm-roberta-large'
 PROJECT_NAME    = 'shc'
 
 wandb.login()
 
-w_run = wandb.init(name=RUN_NAME, project=PROJECT_NAME, notes="Transfer learning from V1")
+w_run = wandb.init(project=PROJECT_NAME, notes="Transfer learning from V1")
 
 s3 = boto3.client('s3')
 if not os.path.exists(CORPUS_TRAIN):
@@ -42,7 +41,6 @@ training_args = TrainingArguments(
   warmup_steps=1000,
   weight_decay=0.01,
   learning_rate=2e-5,
-  run_name=RUN_NAME,
   report_to=["wandb"],
   logging_steps=500,
   fp16=True
