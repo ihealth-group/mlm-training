@@ -21,9 +21,9 @@ CORPUS_DEV      = 'corpus_dev.shc'
 BERT_MODEL_NAME = 'xlm-roberta-base'
 PROJECT_NAME    = 'shc'
 
-# wandb.login()
+wandb.login()
 
-# w_run = wandb.init(project=PROJECT_NAME, notes="Transfer learning from V1")
+w_run = wandb.init(project=PROJECT_NAME, notes="LM Model from XLM Roberta Base")
 
 s3 = boto3.client('s3')
 if not os.path.exists(CORPUS_TRAIN):
@@ -35,7 +35,7 @@ training_args = TrainingArguments(
   output_dir=f'./{CN_MODEL_NAME}',
   overwrite_output_dir=True,
   num_train_epochs=2,
-  per_device_train_batch_size=12,
+  per_device_train_batch_size=8,
   gradient_accumulation_steps=1,
   gradient_checkpointing=True,
   optim="adafactor",
@@ -109,4 +109,4 @@ trainer = Trainer(
 
 trainer.train()
 trainer.save_model()
-# w_run.finish()
+w_run.finish()
