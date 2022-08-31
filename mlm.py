@@ -10,8 +10,7 @@ from transformers import (
   AutoTokenizer,
   DataCollatorForLanguageModeling,
   Trainer,
-  TrainingArguments,
-  IntervalStrategy
+  TrainingArguments
 )
 
 CN_MODEL_NAME   = 'shc-lm-v3'
@@ -44,11 +43,9 @@ training_args = TrainingArguments(
   warmup_steps=1000,
   weight_decay=0.01,
   learning_rate=1e-5,
-  # report_to=["wandb"],
+  report_to=["wandb"],
   logging_steps=500,
-  fp16=True,
-  evaluation_strategy=IntervalStrategy.STEPS,
-  eval_steps=3000
+  fp16=True
 )
 
 # Works on v100 and T4:
