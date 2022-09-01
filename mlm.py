@@ -7,7 +7,7 @@ import os
 from transformers import (
   AutoConfig,
   AutoModelForMaskedLM,
-  AutoTokenizer,
+  RobertaTokenizerFast,
   DataCollatorForLanguageModeling,
   Trainer,
   TrainingArguments
@@ -19,6 +19,7 @@ CORPUS_TRAIN    = 'corpus_train.shc'
 CORPUS_DEV      = 'corpus_dev.shc'
 BERT_MODEL_NAME = 'xlm-roberta-base'
 PROJECT_NAME    = 'shc'
+TOKENIZER_DIR   = 'shc_cn_tokenizer_bpe_32k'
 
 wandb.login()
 
@@ -27,8 +28,8 @@ w_run = wandb.init(project=PROJECT_NAME, notes="LM Model from XLM Roberta Base")
 s3 = boto3.client('s3')
 if not os.path.exists(CORPUS_TRAIN):
   s3.download_file(CORPUS_BUCKET, CORPUS_TRAIN, CORPUS_TRAIN)
-if not os.path.exists(CORPUS_DEV):
-  s3.download_file(CORPUS_BUCKET, CORPUS_DEV, CORPUS_DEV)
+# if not os.path.exists(CORPUS_DEV):
+#   s3.download_file(CORPUS_BUCKET, CORPUS_DEV, CORPUS_DEV)
 
 training_args = TrainingArguments(
   output_dir=f'./{CN_MODEL_NAME}',
@@ -45,6 +46,7 @@ training_args = TrainingArguments(
   learning_rate=1e-5,
   report_to=["wandb"],
   logging_steps=500,
+  do_eval=False,
   fp16=True
 )
 
@@ -56,11 +58,11 @@ set_seed(42)
 
 trains_ds = load_dataset('text', data_files={'train': [CORPUS_TRAIN]})
 
-vals_ds = load_dataset('text', data_files={'test': [CORPUS_DEV]})
+# vals_ds = load_dataset('text', data_files={'test': [CORPUS_DEV]})
 
 config = AutoConfig.from_pretrained(BERT_MODEL_NAME)
+tokenizer = RobertaTokenizerFast.from_pretrained(TOKENIZER_DIR, max_len=512)
 
-tokenizer = AutoTokenizer.from_pretrained(BERT_MODEL_NAME)
 model = AutoModelForMaskedLM.from_pretrained(
   BERT_MODEL_NAME,
   config=config
@@ -77,13 +79,13 @@ def tokenize_function(examples):
   )
 
 
-tokenized_ds_eval = vals_ds['test'].map(
-  tokenize_function,
-  batched=True,
-  num_proc=1,
-  remove_columns=['text'],
-  load_from_cache_file=True,
-)
+# tokenized_ds_eval = vals_ds['test'].map(
+#   tokenize_function,
+#   batched=True,
+#   num_proc=1,
+#   remove_columns=['text'],
+#   load_from_cache_file=True,
+# )
 
 tokenized_ds_train = trains_ds['train'].map(
   tokenize_function,
@@ -93,13 +95,12 @@ tokenized_ds_train = trains_ds['train'].map(
   load_from_cache_file=True,
 )
 
-data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=True, mlm_probability=0.15)
+data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=True, mlm_probability=0.20)
 
 trainer = Trainer(
   model=model,
   args=training_args,
   train_dataset=tokenized_ds_train,
-  eval_dataset=tokenized_ds_eval,
   tokenizer=tokenizer,
   data_collator=data_collator
 )
