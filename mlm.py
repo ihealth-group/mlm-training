@@ -95,7 +95,7 @@ tokenized_ds_train = trains_ds['train'].map(
   load_from_cache_file=True,
 )
 
-data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=True, mlm_probability=0.20)
+data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=True, mlm_probability=0.15)
 
 trainer = Trainer(
   model=model,
