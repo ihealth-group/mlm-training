@@ -90,7 +90,7 @@ def tokenize_function(examples):
 tokenized_ds_train = trains_ds['train'].map(
   tokenize_function,
   batched=True,
-  num_proc=1,
+  num_proc=5,
   remove_columns=['text'],
   load_from_cache_file=True,
 )
