@@ -70,7 +70,6 @@ def compute_metrics(eval_pred):
   results = metric.compute(predictions=predictions, references=labels)
 
   results["eval_accuracy"] = results["accuracy"]
-  print(results)
   results.pop("accuracy")
 
   return results
