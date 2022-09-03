@@ -3,3 +3,4 @@ datasets~=2.4.0
 boto3~=1.18.58
 wandb~=0.12.9
 tokenizers~=0.10.3
+numpy~=1.22.1
