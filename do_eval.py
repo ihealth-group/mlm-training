@@ -3,12 +3,6 @@ import numpy as np
 import boto3
 import os
 
-metric = load_metric("accuracy")
-
-CORPUS_DEV = 'corpus_small_train.shc'
-CORPUS_BUCKET = 'shc-mlm-corpus'
-MODEL = 'shc-lm-v3'
-
 from transformers import (
   AutoConfig,
   AutoModelForMaskedLM,
@@ -17,6 +11,12 @@ from transformers import (
   Trainer,
   TrainingArguments
 )
+
+metric = load_metric("accuracy")
+
+CORPUS_DEV = 'corpus_small_train.shc'
+CORPUS_BUCKET = 'shc-mlm-corpus'
+MODEL = 'shc-lm-v3'
 
 config = AutoConfig.from_pretrained(MODEL)
 tokenizer = RobertaTokenizerFast.from_pretrained(MODEL, max_len=512)
