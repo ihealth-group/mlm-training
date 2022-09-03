@@ -72,10 +72,8 @@ def compute_metrics(eval_pred):
 
 training_args = TrainingArguments(
   output_dir='eval',
-  per_device_train_batch_size=1,
-  gradient_accumulation_steps=1,
-  per_device_eval_batch_size=4,
-  eval_accumulation_steps=1,
+  per_device_eval_batch_size=16,
+  eval_accumulation_steps=2,
   do_eval=True,
   fp16=True
 )
