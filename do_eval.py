@@ -67,12 +67,7 @@ def compute_metrics(eval_pred):
   predictions = [predictions[row][indices[row]] for row in range(len(predictions))]
   predictions = [item for sublist in predictions for item in sublist]
 
-  results = metric.compute(predictions=predictions, references=labels)
-
-  results["eval_accuracy"] = results["accuracy"]
-  results.pop("accuracy")
-
-  return results
+  return metric.compute(predictions=predictions, references=labels)
 
 
 training_args = TrainingArguments(
