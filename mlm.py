@@ -34,7 +34,7 @@ if not os.path.exists(CORPUS_TRAIN):
 training_args = TrainingArguments(
   output_dir=f'./{CN_MODEL_NAME}',
   overwrite_output_dir=True,
-  num_train_epochs=3,
+  num_train_epochs=2,
   per_device_train_batch_size=16,
   gradient_accumulation_steps=2,
   gradient_checkpointing=True,
