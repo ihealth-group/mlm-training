@@ -17,7 +17,7 @@ CN_MODEL_NAME = 'shc-lm-v3-XLMRobertaL'
 CORPUS_BUCKET = 'shc-mlm-corpus'
 CORPUS_TRAIN = 'corpus.shc'
 CORPUS_DEV = 'corpus_dev.shc'
-BERT_MODEL_NAME = 'xlm-roberta-large'
+BERT_MODEL_NAME = 'xlm-roberta-base'
 PROJECT_NAME = 'shc-lm'
 TOKENIZER_DIR = 'shc_cn_tokenizer_bpe_52k'
 
