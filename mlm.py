@@ -5,7 +5,6 @@ import tarfile
 import boto3
 import wandb
 import tqdm
-import os
 
 from transformers import (
   AutoConfig,
@@ -19,7 +18,7 @@ from transformers import (
 CN_MODEL_NAME = Path('shc-lm-v3.1')
 CORPUS_BUCKET = 'shc-mlm-corpus'
 ROOT_BUCKET = 'shc-ai-models'
-CORPUS_TRAIN = 'corpus.shc'
+CORPUS_TRAIN = Path('corpus.shc')
 CORPUS_DEV = 'corpus_dev.shc'
 BERT_MODEL_NAME = Path('shc-lm-v3')
 PROJECT_NAME = 'shc-lm'
@@ -43,9 +42,10 @@ if not BERT_MODEL_NAME.exists():
     )
 
     tar = tarfile.open(f'{str(BERT_MODEL_NAME)}.tar.gz')
+    tar.extractall(Path('.'))
     tar.close()
 
-if not os.path.exists(CORPUS_TRAIN):
+if not CORPUS_TRAIN.exists():
   kwargs = {"Bucket": CORPUS_BUCKET, "Key": CORPUS_TRAIN}
   object_size = s3.head_object(**kwargs)["ContentLength"]
   with tqdm.tqdm(total=object_size, unit="B", unit_scale=True, desc=CORPUS_TRAIN) as pbar:
