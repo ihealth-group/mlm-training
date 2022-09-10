@@ -16,7 +16,7 @@ from transformers import (
   TrainingArguments
 )
 
-CN_MODEL_NAME = 'shc-lm-v3.1'
+CN_MODEL_NAME = Path('shc-lm-v3.1')
 CORPUS_BUCKET = 'shc-mlm-corpus'
 ROOT_BUCKET = 'shc-ai-models'
 CORPUS_TRAIN = 'corpus.shc'
@@ -32,7 +32,7 @@ w_run = wandb.init(project=PROJECT_NAME, notes="LM Model from XLM Roberta Base")
 s3 = boto3.client('s3')
 
 if not BERT_MODEL_NAME.exists():
-  kwargs = {"Bucket": 'shc-ai-models', "Key": BERT_MODEL_NAME}
+  kwargs = {"Bucket": 'shc-ai-models', "Key": f'language_model/{BERT_MODEL_NAME}.tar.gz'}
   object_size = s3.head_object(**kwargs)["ContentLength"]
   with tqdm.tqdm(total=object_size, unit="B", unit_scale=True, desc=BERT_MODEL_NAME) as pbar:
     s3.download_file(
@@ -43,7 +43,6 @@ if not BERT_MODEL_NAME.exists():
     )
 
     tar = tarfile.open(f'{str(BERT_MODEL_NAME)}.tar.gz')
-    tar.extractall(Path('assets'))
     tar.close()
 
 if not os.path.exists(CORPUS_TRAIN):
@@ -58,7 +57,7 @@ if not os.path.exists(CORPUS_TRAIN):
     )
 
 training_args = TrainingArguments(
-  output_dir=f'./{CN_MODEL_NAME}',
+  output_dir=CN_MODEL_NAME,
   overwrite_output_dir=True,
   num_train_epochs=1,
   per_device_train_batch_size=16,
