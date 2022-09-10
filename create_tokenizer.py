@@ -1,6 +1,7 @@
 from tokenizers import ByteLevelBPETokenizer
 from glob import glob
 import boto3
+import tqdm
 import os
 
 CORPUS_BUCKET = 'shc-mlm-corpus'
@@ -9,7 +10,15 @@ TOKENIZER_DIR = 'shc_cn_tokenizer_bpe_52k'
 
 s3 = boto3.client('s3')
 if not os.path.exists(CORPUS_TRAIN):
-  s3.download_file(CORPUS_BUCKET, CORPUS_TRAIN, CORPUS_TRAIN)
+  kwargs = {"Bucket": CORPUS_BUCKET, "Key": CORPUS_TRAIN}
+  object_size = s3.head_object(**kwargs)["ContentLength"]
+  with tqdm.tqdm(total=object_size, unit="B", unit_scale=True, desc=CORPUS_TRAIN) as pbar:
+    s3.download_file(
+      CORPUS_BUCKET,
+      CORPUS_TRAIN,
+      CORPUS_TRAIN,
+      Callback=lambda bytes_transferred: pbar.update(bytes_transferred)
+    )
 
 paths = list(
   glob(CORPUS_TRAIN)

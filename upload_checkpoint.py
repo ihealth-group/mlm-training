@@ -3,7 +3,7 @@ import os
 
 s3 = boto3.client('s3')
 
-CN_MODEL_NAME = 'shc-lm-v3'
+CN_MODEL_NAME = 'shc-lm-v3-XLMRobertaL'
 
 for root, dirs, files in os.walk(CN_MODEL_NAME):
   for filename in files:
