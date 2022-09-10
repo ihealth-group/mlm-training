@@ -13,7 +13,7 @@ from transformers import (
   TrainingArguments
 )
 
-CN_MODEL_NAME = 'shc-lm-v3-XLMRobertaL'
+CN_MODEL_NAME = 'shc-lm-v3-XLMRobertaB'
 CORPUS_BUCKET = 'shc-mlm-corpus'
 CORPUS_TRAIN = 'corpus.shc'
 CORPUS_DEV = 'corpus_dev.shc'
