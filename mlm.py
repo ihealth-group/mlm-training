@@ -34,7 +34,7 @@ s3 = boto3.client('s3')
 if not BERT_MODEL_NAME.exists():
   kwargs = {"Bucket": 'shc-ai-models', "Key": f'language_model/{BERT_MODEL_NAME}.tar.gz'}
   object_size = s3.head_object(**kwargs)["ContentLength"]
-  with tqdm.tqdm(total=object_size, unit="B", unit_scale=True, desc=BERT_MODEL_NAME) as pbar:
+  with tqdm.tqdm(total=object_size, unit="B", unit_scale=True, desc=f'language_model/{BERT_MODEL_NAME}.tar.gz') as pbar:
     s3.download_file(
       ROOT_BUCKET,
       f'language_model/{BERT_MODEL_NAME}.tar.gz',
