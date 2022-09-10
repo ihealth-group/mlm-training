@@ -13,13 +13,13 @@ from transformers import (
   TrainingArguments
 )
 
-CN_MODEL_NAME   = 'shc-lm-v3'
-CORPUS_BUCKET   = 'shc-mlm-corpus'
-CORPUS_TRAIN    = 'corpus_train.shc'
-CORPUS_DEV      = 'corpus_dev.shc'
-BERT_MODEL_NAME = 'xlm-roberta-base'
-PROJECT_NAME    = 'shc'
-TOKENIZER_DIR   = 'shc_cn_tokenizer_bpe_32k'
+CN_MODEL_NAME = 'shc-lm-v3-XLMRobertaL'
+CORPUS_BUCKET = 'shc-mlm-corpus'
+CORPUS_TRAIN = 'corpus.shc'
+CORPUS_DEV = 'corpus_dev.shc'
+BERT_MODEL_NAME = 'xlm-roberta-large'
+PROJECT_NAME = 'shc-lm'
+TOKENIZER_DIR = 'shc_cn_tokenizer_bpe_52k'
 
 wandb.login()
 
@@ -34,9 +34,9 @@ if not os.path.exists(CORPUS_TRAIN):
 training_args = TrainingArguments(
   output_dir=f'./{CN_MODEL_NAME}',
   overwrite_output_dir=True,
-  num_train_epochs=1,
-  per_device_train_batch_size=16,
-  gradient_accumulation_steps=2,
+  num_train_epochs=3,
+  per_device_train_batch_size=32,
+  gradient_accumulation_steps=1,
   gradient_checkpointing=True,
   optim="adafactor",
   save_steps=1000,
@@ -50,10 +50,6 @@ training_args = TrainingArguments(
   fp16=True
 )
 
-# Works on v100 and T4:
-# batch: 2
-# grad acc: 8
-
 set_seed(42)
 
 trains_ds = load_dataset('text', data_files={'train': [CORPUS_TRAIN]})
@@ -61,7 +57,7 @@ trains_ds = load_dataset('text', data_files={'train': [CORPUS_TRAIN]})
 # vals_ds = load_dataset('text', data_files={'test': [CORPUS_DEV]})
 
 config = AutoConfig.from_pretrained(BERT_MODEL_NAME)
-tokenizer = RobertaTokenizerFast.from_pretrained(TOKENIZER_DIR, max_len=512)
+tokenizer = RobertaTokenizerFast.from_pretrained(TOKENIZER_DIR, max_len=512, add_prefix_space=True)
 
 model = AutoModelForMaskedLM.from_pretrained(
   BERT_MODEL_NAME,

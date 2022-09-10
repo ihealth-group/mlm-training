@@ -3,9 +3,9 @@ from glob import glob
 import boto3
 import os
 
-CORPUS_BUCKET   = 'shc-mlm-corpus'
-CORPUS_TRAIN    = 'corpus_train.shc'
-TOKENIZER_DIR   = 'shc_cn_tokenizer_bpe_32k'
+CORPUS_BUCKET = 'shc-mlm-corpus'
+CORPUS_TRAIN = 'corpus.shc'
+TOKENIZER_DIR = 'shc_cn_tokenizer_bpe_52k'
 
 s3 = boto3.client('s3')
 if not os.path.exists(CORPUS_TRAIN):
@@ -18,7 +18,7 @@ paths = list(
 tokenizer = ByteLevelBPETokenizer(lowercase=False)
 
 # Customize training
-tokenizer.train(files=paths, vocab_size=32000, min_frequency=3, special_tokens=[
+tokenizer.train(files=paths, vocab_size=52000, min_frequency=3, special_tokens=[
     "<s>",
     "<pad>",
     "</s>",
